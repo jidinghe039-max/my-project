@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>SKYVIEW · 蒲河辉山</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500&family=DM+Mono:wght@300;400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F7F5;--bg1:#E4EFE9;--bg2:#C8DDD2;
+  --ink:#1A3530;--ink2:#3D6B5E;--ink3:#6A9B8A;
+  --green:#4E9B7A;--green2:#3A7D5F;--green3:#2B6049;
+  --gold:#C49A3C;--goldbg:#F8F0DC;
+  --white:#FFFFFF;--offwhite:#F8FBF9;
+  --r8:8px;--r12:12px;--r20:20px;--r28:28px
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+body{
+  font-family:'Outfit',sans-serif;
+  background:#1A3530;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:20px;
+}
+
+.phone{
+  width:375px;height:812px;
+  background:var(--bg);
+  border-radius:44px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 40px 80px rgba(0,0,0,.4);
+}
+
+.screen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  transition:transform .45s cubic-bezier(.77,0,.18,1),opacity .35s ease;
+}
+.screen.hidden-left{transform:translateX(-100%);opacity:0;pointer-events:none}
+.screen.hidden-right{transform:translateX(100%);opacity:0;pointer-events:none}
+
+/* ── STATUS BAR ── */
+.statusbar{
+  height:44px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 24px;
+  flex-shrink:0;font-size:12px;font-weight:500;
+  color:var(--ink);
+}
+.sb-time{font-family:'DM Mono',monospace;font-size:14px}
+.sb-icons{display:flex;gap:5px;align-items:center}
+.sb-icons svg{width:16px;height:16px}
+
+/* ── SPLASH SCREEN ── */
+#s-splash{background:var(--ink);justify-content:center;align-items:center;gap:0}
+.splash-bg{position:absolute;inset:0;overflow:hidden}
+.splash-bg::before{
+  content:'';position:absolute;
+  width:500px;height:500px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(78,155,122,.18) 0%,transparent 70%);
+  top:-100px;left:-80px;
+}
+.splash-bg::after{
+  content:'';position:absolute;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,154,60,.08) 0%,transparent 70%);
+  bottom:-50px;right:-60px;
+}
+.splash-content{position:relative;z-index:2;text-align:center;padding:40px}
+.splash-icon{
+  width:72px;height:72px;
+  border:1px solid rgba(78,155,122,.4);
+  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;
+}
+.splash-logo{
+  font-family:'Noto Serif SC',serif;
+  font-size:28px;font-weight:300;
+  color:rgba(242,247,245,.95);
+  letter-spacing:.12em;margin-bottom:6px;
+}
+.splash-sub{
+  font-size:12px;color:rgba(168,196,180,.6);
+  letter-spacing:.2em;text-transform:uppercase;
+  margin-bottom:60px;
+}
+.splash-divider{
+  width:40px;height:1px;
+  background:rgba(78,155,122,.3);
+  margin:0 auto 60px;
+}
+.btn-start{
+  width:100%;padding:16px;
+  background:var(--green);
+  border:none;border-radius:var(--r20);
+  color:white;font-size:15px;font-weight:500;
+  font-family:'Outfit',sans-serif;
+  cursor:pointer;
+  letter-spacing:.04em;
+  transition:opacity .15s;
+}
+.btn-start:active{opacity:.85}
+.btn-login{
+  margin-top:12px;width:100%;padding:14px;
+  background:transparent;
+  border:0.5px solid rgba(78,155,122,.35);
+  border-radius:var(--r20);
+  color:rgba(168,196,180,.7);
+  font-size:14px;font-family:'Outfit',sans-serif;
+  cursor:pointer;transition:border-color .15s;
+}
+.btn-login:active{border-color:rgba(78,155,122,.6)}
+
+/* ── TOP NAV ── */
+.topnav{
+  height:56px;display:flex;align-items:center;
+  padding:0 20px;gap:12px;flex-shrink:0;
+}
+.back-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(26,53,48,.06);
+  border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.back-btn:active{background:rgba(26,53,48,.12)}
+.nav-title{font-size:16px;font-weight:500;color:var(--ink);flex:1}
+.nav-badge{
+  font-size:11px;padding:3px 10px;
+  border-radius:20px;background:var(--green);color:white;
+  font-weight:500;
+}
+
+/* ── BOTTOM NAV ── */
+.bottomnav{
+  height:80px;background:white;
+  border-top:0.5px solid rgba(26,53,48,.08);
+  display:flex;align-items:flex-start;padding-top:10px;
+  flex-shrink:0;
+}
+.bnav-item{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;gap:4px;cursor:pointer;
+  padding:4px 0;border:none;background:none;
+  font-family:'Outfit',sans-serif;
+}
+.bnav-icon{
+  width:24px;height:24px;
+  display:flex;align-items:center;justify-content:center;
+}
+.bnav-label{font-size:10px;color:var(--ink3)}
+.bnav-item.active .bnav-label{color:var(--green);font-weight:500}
+.bnav-item.active .bnav-icon svg{stroke:var(--green)}
+.bnav-item .bnav-icon svg{stroke:var(--ink3)}
+
+/* ── HOME SCREEN ── */
+#s-home{background:var(--bg)}
+.home-scroll{flex:1;overflow-y:auto;padding:0 20px 20px}
+.home-hero{
+  background:var(--ink);border-radius:var(--r28);
+  padding:24px;margin-bottom:16px;
+  position:relative;overflow:hidden;
+}
+.hero-pattern{
+  position:absolute;right:-20px;top:-20px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(78,155,122,.15) 0%,transparent 70%);
+}
+.hero-eyebrow{
+  font-size:11px;color:rgba(168,196,180,.55);
+  letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.hero-flight{
+  font-family:'Noto Serif SC',serif;
+  font-size:22px;font-weight:300;
+  color:rgba(242,247,245,.95);
+  line-height:1.3;margin-bottom:16px;
+}
+.hero-meta{display:flex;gap:16px;margin-bottom:20px}
+.hm-item{display:flex;flex-direction:column;gap:2px}
+.hm-val{font-size:18px;font-weight:500;color:rgba(242,247,245,.9);font-family:'DM Mono',monospace}
+.hm-label{font-size:10px;color:rgba(168,196,180,.5);letter-spacing:.06em}
+.hero-progress{background:rgba(255,255,255,.08);border-radius:4px;height:3px;margin-bottom:12px}
+.hero-progress-fill{height:100%;width:0%;background:var(--green);border-radius:4px;transition:width .5s}
+.hero-status{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:rgba(168,196,180,.6);
+}
+.status-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);
+}
+.home-section-label{
+  font-size:11px;font-weight:500;color:var(--ink3);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin:20px 0 10px;
+}
+.card{
+  background:white;border-radius:var(--r20);
+  border:0.5px solid rgba(26,53,48,.08);
+  margin-bottom:10px;overflow:hidden;
+}
+.card-row{
+  padding:14px 16px;display:flex;
+  align-items:center;gap:12px;
+  border-bottom:0.5px solid rgba(26,53,48,.06);
+  cursor:pointer;transition:background .12s;
+}
+.card-row:last-child{border-bottom:none}
+.card-row:active{background:rgba(26,53,48,.03)}
+.cr-icon{
+  width:38px;height:38px;border-radius:var(--r12);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.cr-body{flex:1}
+.cr-title{font-size:14px;font-weight:500;color:var(--ink)}
+.cr-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.cr-right{display:flex;align-items:center;gap:6px}
+.cr-badge{
+  font-size:10px;padding:3px 8px;
+  border-radius:10px;font-weight:500;
+}
+.chevron{
+  color:var(--ink3);font-size:16px;
+  opacity:.5;
+}
+.weather-card{
+  background:white;border-radius:var(--r20);
+  border:0.5px solid rgba(26,53,48,.08);
+  padding:16px;margin-bottom:10px;
+}
+.wc-row{display:flex;justify-content:space-between;align-items:flex-start}
+.wc-temp{font-size:36px;font-weight:300;color:var(--ink);font-family:'DM Mono',monospace}
+.wc-unit{font-size:18px;color:var(--ink3)}
+.wc-desc{font-size:13px;color:var(--ink2);margin-top:4px}
+.wc-meta{display:flex;gap:12px;margin-top:12px;padding-top:12px;border-top:0.5px solid rgba(26,53,48,.06)}
+.wcm{font-size:11px;color:var(--ink3);display:flex;flex-direction:column;gap:2px}
+.wcm span:first-child{font-weight:500;color:var(--ink2)}
+
+/* ── FLIGHT INFO ── */
+#s-flight{background:var(--bg)}
+.flight-scroll{flex:1;overflow-y:auto;padding:0 20px 20px}
+.route-card{
+  background:var(--ink);border-radius:var(--r28);
+  padding:24px;margin-bottom:16px;
+}
+.route-label{font-size:11px;color:rgba(168,196,180,.45);letter-spacing:.14em;text-transform:uppercase;margin-bottom:16px}
+.route-stops{position:relative;padding-left:24px}
+.route-line{
+  position:absolute;left:7px;top:16px;bottom:16px;
+  width:1px;background:rgba(78,155,122,.25);
+}
+.route-stop{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px}
+.route-stop:last-child{margin-bottom:0}
+.rs-dot{
+  width:14px;height:14px;border-radius:50%;
+  border:1.5px solid var(--green);
+  background:var(--ink);
+  flex-shrink:0;margin-top:2px;
+  position:relative;z-index:1;
+}
+.rs-dot.active{background:var(--green)}
+.rs-body{flex:1}
+.rs-name{font-size:15px;font-weight:500;color:rgba(242,247,245,.9)}
+.rs-meta{font-size:11px;color:rgba(168,196,180,.5);margin-top:2px}
+.rs-time{font-size:13px;color:rgba(168,196,180,.6);font-family:'DM Mono',monospace}
+.poi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.poi-card{
+  background:white;border-radius:var(--r20);
+  border:0.5px solid rgba(26,53,48,.08);
+  padding:14px;cursor:pointer;
+  transition:border-color .15s;
+}
+.poi-card:active{border-color:var(--green)}
+.poi-num{
+  font-size:11px;font-weight:500;
+  color:var(--green);margin-bottom:6px;
+  font-family:'DM Mono',monospace;
+}
+.poi-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.poi-sub{font-size:11px;color:var(--ink3)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info-cell{
+  background:white;border-radius:var(--r12);
+  padding:12px;border:0.5px solid rgba(26,53,48,.08);
+}
+.ic-label{font-size:10px;color:var(--ink3);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em}
+.ic-val{font-size:16px;font-weight:500;color:var(--ink)}
+.ic-unit{font-size:11px;color:var(--ink3)}
+
+/* ── MODE SCREEN ── */
+#s-mode{background:var(--bg)}
+.mode-scroll{flex:1;overflow-y:auto;padding:0 20px 20px}
+.mode-intro{
+  font-size:13px;color:var(--ink2);line-height:1.7;
+  margin-bottom:20px;
+}
+.mode-option{
+  background:white;border-radius:var(--r20);
+  border:2px solid rgba(26,53,48,.06);
+  padding:18px;margin-bottom:12px;
+  cursor:pointer;transition:all .2s;
+  position:relative;overflow:hidden;
+}
+.mode-option.selected{border-color:var(--green)}
+.mode-option:active{transform:scale(.99)}
+.mo-check{
+  position:absolute;right:16px;top:16px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--bg1);
+  border:1.5px solid var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.mode-option.selected .mo-check{
+  background:var(--green);border-color:var(--green);
+}
+.mo-check svg{opacity:0;transition:opacity .15s}
+.mode-option.selected .mo-check svg{opacity:1}
+.mo-icon{
+  width:44px;height:44px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:12px;
+}
+.mo-name{font-size:16px;font-weight:500;color:var(--ink);margin-bottom:6px}
+.mo-desc{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:10px}
+.mo-tags{display:flex;gap:6px;flex-wrap:wrap}
+.mo-tag{
+  font-size:10px;padding:3px 8px;
+  border-radius:8px;font-weight:500;
+}
+.confirm-btn{
+  position:sticky;bottom:0;
+  background:var(--bg);padding:16px 0 0;
+}
+.btn-confirm{
+  width:100%;padding:16px;
+  background:var(--green);
+  border:none;border-radius:var(--r20);
+  color:white;font-size:15px;font-weight:500;
+  font-family:'Outfit',sans-serif;cursor:pointer;
+  letter-spacing:.04em;transition:opacity .15s;
+}
+.btn-confirm:active{opacity:.85}
+.btn-confirm:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── BOARDING PASS ── */
+#s-boarding{background:var(--bg)}
+.bp-scroll{flex:1;overflow-y:auto;padding:0 20px 20px}
+.boarding-pass{
+  background:var(--ink);
+  border-radius:var(--r28);
+  overflow:hidden;margin-bottom:16px;
+}
+.bp-top{padding:24px 24px 0}
+.bp-airline{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.bp-brand{
+  font-family:'Noto Serif SC',serif;
+  font-size:15px;font-weight:300;
+  color:rgba(168,196,180,.6);
+  letter-spacing:.1em;
+}
+.bp-status{
+  font-size:11px;padding:4px 10px;
+  border-radius:20px;
+  background:rgba(78,155,122,.2);
+  color:var(--green);font-weight:500;
+  border:0.5px solid rgba(78,155,122,.3);
+}
+.bp-route{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:20px;
+}
+.bp-code{
+  font-size:28px;font-weight:300;
+  color:rgba(242,247,245,.9);
+  font-family:'DM Mono',monospace;
+}
+.bp-arrow{
+  flex:1;text-align:center;
+  color:rgba(78,155,122,.6);font-size:18px;
+}
+.bp-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:0;margin-bottom:0;
+  border-top:0.5px solid rgba(78,155,122,.15);
+}
+.bp-cell{padding:14px;border-right:0.5px solid rgba(78,155,122,.1)}
+.bp-cell:last-child{border-right:none}
+.bpc-label{font-size:10px;color:rgba(168,196,180,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.bpc-val{font-size:14px;font-weight:500;color:rgba(242,247,245,.85);font-family:'DM Mono',monospace}
+.bp-divider{
+  display:flex;align-items:center;
+  position:relative;margin:0 -1px;
+}
+.bp-divider::before,.bp-divider::after{
+  content:'';width:20px;height:20px;
+  border-radius:50%;
+  background:var(--bg);
+  flex-shrink:0;
+}
+.bp-dashes{
+  flex:1;border-top:1.5px dashed rgba(78,155,122,.2);
+}
+.bp-bottom{padding:24px;text-align:center}
+.bp-qr{
+  width:140px;height:140px;
+  margin:0 auto 16px;
+  background:white;border-radius:12px;
+  padding:10px;
+  display:grid;
+  place-items:center;
+}
+.bp-name{font-size:15px;color:rgba(242,247,245,.7);margin-bottom:4px}
+.bp-seat{
+  font-size:12px;color:rgba(168,196,180,.45);
+  letter-spacing:.06em;
+}
+.checklist-card{
+  background:white;border-radius:var(--r20);
+  border:0.5px solid rgba(26,53,48,.08);
+  padding:16px;margin-bottom:10px;
+}
+.cl-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:12px}
+.cl-item{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;
+  border-bottom:0.5px solid rgba(26,53,48,.06);
+  cursor:pointer;
+}
+.cl-item:last-child{border-bottom:none}
+.cl-check{
+  width:20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--bg2);
+  background:white;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.cl-item.done .cl-check{background:var(--green);border-color:var(--green)}
+.cl-text{font-size:13px;color:var(--ink2);flex:1}
+.cl-item.done .cl-text{color:var(--ink3);text-decoration:line-through}
+
+/* ── PROFILE SCREEN ── */
+#s-profile{background:var(--bg)}
+.profile-scroll{flex:1;overflow-y:auto;padding:0 20px 20px}
+.avatar-section{
+  background:var(--ink);border-radius:var(--r28);
+  padding:28px 24px;margin-bottom:16px;
+  display:flex;align-items:center;gap:16px;
+}
+.avatar{
+  width:60px;height:60px;border-radius:50%;
+  background:rgba(78,155,122,.25);
+  border:1.5px solid rgba(78,155,122,.35);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:500;
+  color:rgba(168,196,180,.8);
+  font-family:'Noto Serif SC',serif;
+  flex-shrink:0;
+}
+.av-name{font-size:18px;font-weight:500;color:rgba(242,247,245,.9)}
+.av-sub{font-size:12px;color:rgba(168,196,180,.5);margin-top:3px}
+.av-flights{
+  margin-top:14px;padding-top:14px;
+  border-top:0.5px solid rgba(78,155,122,.15);
+  display:flex;gap:20px;
+  width:100%;
+}
+.af-item{text-align:center}
+.af-num{font-size:22px;font-weight:500;color:rgba(242,247,245,.85);font-family:'DM Mono',monospace}
+.af-label{font-size:10px;color:rgba(168,196,180,.4);letter-spacing:.06em;margin-top:2px}
+.pref-section{margin-bottom:10px}
+.ps-label{font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .5s ease both}
+.fade-up-1{animation:fadeUp .5s .08s ease both;opacity:0}
+.fade-up-2{animation:fadeUp .5s .16s ease both;opacity:0}
+.fade-up-3{animation:fadeUp .5s .24s ease both;opacity:0}
+.fade-up-4{animation:fadeUp .5s .32s ease both;opacity:0}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+
+/* QR pattern */
+.qr-cell{
+  display:inline-block;
+  background:var(--ink);
+}
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- STATUS BAR (shared) -->
+  <div class="statusbar" id="statusbar" style="position:absolute;top:0;left:0;right:0;z-index:100;background:transparent">
+    <span class="sb-time" id="clock">09:41</span>
+    <div class="sb-icons">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6c3.7-4 9.3-4 13 0M5 10c1.7-2 5.3-2 7 0M9 14l3 3 3-3"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="8" width="3" height="13" rx="1"/><rect x="6" y="5" width="3" height="16" rx="1"/><rect x="11" y="2" width="3" height="19" rx="1"/><rect x="16" y="6" width="4" height="15" rx="1" opacity=".35"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v3" stroke-width="2" stroke-linecap="round"/><rect x="4" y="9" width="11" height="7" rx="1" fill="currentColor" stroke="none"/></svg>
+    </div>
+  </div>
+
+  <!-- ══ SPLASH ══ -->
+  <div class="screen" id="s-splash">
+    <div class="splash-bg"></div>
+    <div class="statusbar" style="color:rgba(168,196,180,.5)">
+      <span class="sb-time" style="color:rgba(168,196,180,.5)" id="clock2">09:41</span>
+      <div class="sb-icons" style="color:rgba(168,196,180,.4)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6c3.7-4 9.3-4 13 0M5 10c1.7-2 5.3-2 7 0M9 14l3 3 3-3"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="8" width="3" height="13" rx="1"/><rect x="6" y="5" width="3" height="16" rx="1"/><rect x="11" y="2" width="3" height="19" rx="1"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v3" stroke-width="2" stroke-linecap="round"/><rect x="4" y="9" width="11" height="7" rx="1" fill="currentColor" stroke="none"/></svg>
+      </div>
+    </div>
+    <div class="splash-content fade-up">
+      <div class="splash-icon">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <path d="M18 4L32 28H4L18 4Z" stroke="rgba(78,155,122,.7)" stroke-width="1.5" fill="none"/>
+          <circle cx="18" cy="18" r="5" stroke="rgba(78,155,122,.5)" stroke-width="1"/>
+          <circle cx="18" cy="18" r="2" fill="rgba(78,155,122,.6)"/>
+        </svg>
+      </div>
+      <div class="splash-logo">天空视界</div>
+      <div class="splash-sub">SKYVIEW · eVTOL</div>
+      <div class="splash-divider"></div>
+      <button class="btn-start" onclick="go('s-home')">开始体验</button>
+      <button class="btn-login">已有账号，登录</button>
+    </div>
+  </div>
+
+  <!-- ══ HOME ══ -->
+  <div class="screen hidden-right" id="s-home">
+    <div class="statusbar" style="color:var(--ink)">
+      <span class="sb-time" style="color:var(--ink)">09:41</span>
+      <div class="sb-icons" style="color:var(--ink)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 6c3.7-4 9.3-4 13 0M5 10c1.7-2 5.3-2 7 0M9 14l3 3 3-3"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="8" width="3" height="13" rx="1"/><rect x="6" y="5" width="3" height="16" rx="1"/><rect x="11" y="2" width="3" height="19" rx="1"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v3" stroke-width="2" stroke-linecap="round"/><rect x="4" y="9" width="11" height="7" rx="1" fill="currentColor" stroke="none"/></svg>
+      </div>
+    </div>
+    <div class="home-scroll" style="padding-top:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:0 2px" class="fade-up">
+        <div>
+          <div style="font-size:12px;color:var(--ink3)">早上好，</div>
+          <div style="font-size:20px;font-weight:500;color:var(--ink);font-family:'Noto Serif SC',serif">仲佳玮</div>
+        </div>
+        <div style="width:40px;height:40px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:500;color:rgba(168,196,180,.8);font-family:'Noto Serif SC',serif;cursor:pointer" onclick="go('s-profile')">仲</div>
+      </div>
+
+      <div class="home-hero fade-up-1" onclick="go('s-flight')">
+        <div class="hero-pattern"></div>
+        <div class="hero-eyebrow">今日行程</div>
+        <div class="hero-flight">蒲河·辉山<br>生态观光环线</div>
+        <div class="hero-meta">
+          <div class="hm-item">
+            <div class="hm-val">14:30</div>
+            <div class="hm-label">起飞时间</div>
+          </div>
+          <div class="hm-item">
+            <div class="hm-val">22'</div>
+            <div class="hm-label">飞行时长</div>
+          </div>
+          <div class="hm-item">
+            <div class="hm-val">A座</div>
+            <div class="hm-label">座位</div>
+          </div>
+        </div>
+        <div class="hero-progress">
+          <div class="hero-progress-fill" id="hero-bar"></div>
+        </div>
+        <div class="hero-status">
+          <div class="status-dot pulse"></div>
+          <span>登机准备中 · 距起飞 3 小时 49 分钟</span>
+        </div>
+      </div>
+
+      <div class="weather-card fade-up-2">
+        <div class="wc-row">
+          <div>
+            <div class="wc-desc" style="margin-bottom:4px;color:var(--ink3);font-size:12px">沈北新区 · 今日飞行气象</div>
+            <div style="display:flex;align-items:baseline;gap:2px">
+              <div class="wc-temp">-8</div>
+              <div class="wc-unit">°C</div>
+            </div>
+            <div class="wc-desc">晴 · 东南风 4级</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:40px;line-height:1;margin-bottom:6px">☀</div>
+            <div style="font-size:11px;color:var(--green);font-weight:500">飞行条件极佳</div>
+          </div>
+        </div>
+        <div class="wc-meta">
+          <div class="wcm"><span>18km</span><span>能见度</span></div>
+          <div class="wcm"><span>4m/s</span><span>风速</span></div>
+          <div class="wcm"><span>35%</span><span>湿度</span></div>
+          <div class="wcm"><span>无</span><span>降水</span></div>
+        </div>
+      </div>
+
+      <div class="home-section-label fade-up-3">登机准备</div>
+      <div class="card fade-up-3">
+        <div class="card-row" onclick="go('s-mode')">
+          <div class="cr-icon" style="background:#E4EFE9">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3A7D5F" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="2.5"/><path d="M10 3v2M10 15v2M3 10h2M15 10h2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="cr-body">
+            <div class="cr-title">选择观景模式</div>
+            <div class="cr-sub">景点探索 / 摄影引导 / 静谧沉浸</div>
+          </div>
+          <div class="cr-right">
+            <span class="cr-badge" style="background:#FEF0DC;color:#8C6020">待设置</span>
+            <span class="chevron">›</span>
+          </div>
+        </div>
+        <div class="card-row" onclick="go('s-boarding')">
+          <div class="cr-icon" style="background:#E4EFE9">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3A7D5F" stroke-width="1.5"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M7 4V2M13 4V2" stroke-linecap="round"/><path d="M3 8h14" stroke-linecap="round"/><rect x="6" y="11" width="3" height="3" rx=".5"/></svg>
+          </div>
+          <div class="cr-body">
+            <div class="cr-title">查看登机牌</div>
+            <div class="cr-sub">航班 CE-902 · 座位 1A</div>
+          </div>
+          <div class="cr-right">
+            <span class="cr-badge" style="background:#E1F0E8;color:#2B6049">已就绪</span>
+            <span class="chevron">›</span>
+          </div>
+        </div>
+        <div class="card-row" onclick="go('s-flight')">
+          <div class="cr-icon" style="background:#E4EFE9">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#3A7D5F" stroke-width="1.5"><path d="M3 10h14M10 3v14" stroke-linecap="round"/><circle cx="10" cy="10" r="7"/></svg>
+          </div>
+          <div class="cr-body">
+            <div class="cr-title">航线与景点</div>
+            <div class="cr-sub">蒲河湿地 · 辉山秀湖 · 七星湿地</div>
+          </div>
+          <div class="cr-right">
+            <span class="chevron">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottomnav">
+      <button class="bnav-item active" onclick="go('s-home')">
+        <div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9L11 2l9 7v10a1 1 0 01-1 1H3a1 1 0 01-1-1V9z"/><path d="M8 21V11h6v10"/></svg></div>
+        <span class="bnav-label" style="color:var(--green)">首页</span>
+      </button>
+      <button class="bnav-item" onclick="go('s-flight')">
+        <div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M21 16l-8-8-4 4-6-3"/><circle cx="3" cy="9" r="1.5"/><circle cx="11" cy="5" r="1.5"/><circle cx="19" cy="13" r="1.5"/></svg></div>
+        <span class="bnav-label">航线</span>
+      </button>
+      <button class="bnav-item" onclick="go('s-boarding')">
+        <div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="18" height="15" rx="2"/><path d="M2 9h18"/><path d="M7 3v3M15 3v3"/></svg></div>
+        <span class="bnav-label">登机牌</span>
+      </button>
+      <button class="bnav-item" onclick="go('s-profile')">
+        <div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="7" r="4"/><path d="M3 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+        <span class="bnav-label">我的</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ FLIGHT INFO ══ -->
+  <div class="screen hidden-right" id="s-flight">
+    <div class="topnav">
+      <button class="back-btn" onclick="back()"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"><path d="M11 4L6 9l5 5"/></svg></button>
+      <span class="nav-title">航线详情</span>
+      <span class="nav-badge">14:30 起飞</span>
+    </div>
+    <div class="flight-scroll">
+      <div class="route-card fade-up">
+        <div class="route-label">飞行路线</div>
+        <div class="route-stops">
+          <div class="route-line"></div>
+          <div class="route-stop"><div class="rs-dot active"></div><div class="rs-body"><div class="rs-name">VP-01 起降点</div><div class="rs-meta">蒲河花海公园北侧</div></div><div class="rs-time">14:30</div></div>
+          <div class="route-stop"><div class="rs-dot"></div><div class="rs-body"><div class="rs-name">蒲河国家湿地</div><div class="rs-meta">芦苇荡 · 候鸟栖息地</div></div><div class="rs-time">14:36</div></div>
+          <div class="route-stop"><div class="rs-dot"></div><div class="rs-body"><div class="rs-name">辉山 · 秀湖</div><div class="rs-meta">盛京八景 · 盘旋停留 60s</div></div><div class="rs-time">14:44</div></div>
+          <div class="route-stop"><div class="rs-dot"></div><div class="rs-body"><div class="rs-name">七星国家湿地</div><div class="rs-meta">候鸟迁徙核心区 · 80m 低飞</div></div><div class="rs-time">14:48</div></div>
+          <div class="route-stop"><div class="rs-dot active"></div><div class="rs-body"><div class="rs-name">VP-01 返航降落</div><div class="rs-meta">稻梦小镇上空返回</div></div><div class="rs-time">14:52</div></div>
+        </div>
+      </div>
+
+      <div style="font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px" class="fade-up-1">核心景观</div>
+      <div class="poi-grid fade-up-1">
+        <div class="poi-card"><div class="poi-num">01</div><div class="poi-name">蒲河国家湿地</div><div class="poi-sub">候鸟 67 种 · 面积 298km²</div></div>
+        <div class="poi-card"><div class="poi-num">02</div><div class="poi-name">辉山晴雪</div><div class="poi-sub">盛京八景 · 265.9m</div></div>
+        <div class="poi-card"><div class="poi-num">03</div><div class="poi-name">秀湖水库</div><div class="poi-sub">三山环抱 · 1.2亿m³</div></div>
+        <div class="poi-card"><div class="poi-num">04</div><div class="poi-name">七星湿地</div><div class="poi-sub">东方白鹳迁徙地</div></div>
+      </div>
+
+      <div style="font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;margin:16px 0 10px" class="fade-up-2">飞行参数</div>
+      <div class="info-grid fade-up-2">
+        <div class="info-cell"><div class="ic-label">总航程</div><div class="ic-val">14.8 <span class="ic-unit">km</span></div></div>
+        <div class="info-cell"><div class="ic-label">飞行时长</div><div class="ic-val">22 <span class="ic-unit">min</span></div></div>
+        <div class="info-cell"><div class="ic-label">巡航高度</div><div class="ic-val">150 <span class="ic-unit">m</span></div></div>
+        <div class="info-cell"><div class="ic-label">巡航速度</div><div class="ic-val">68 <span class="ic-unit">km/h</span></div></div>
+        <div class="info-cell"><div class="ic-label">座位数</div><div class="ic-val">4 <span class="ic-unit">座</span></div></div>
+        <div class="info-cell"><div class="ic-label">驾驶方式</div><div class="ic-val" style="font-size:13px">全自动</div></div>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <button class="bnav-item" onclick="go('s-home')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9L11 2l9 7v10a1 1 0 01-1 1H3a1 1 0 01-1-1V9z"/><path d="M8 21V11h6v10"/></svg></div><span class="bnav-label">首页</span></button>
+      <button class="bnav-item active" onclick="go('s-flight')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M21 16l-8-8-4 4-6-3"/><circle cx="3" cy="9" r="1.5"/><circle cx="11" cy="5" r="1.5"/><circle cx="19" cy="13" r="1.5"/></svg></div><span class="bnav-label" style="color:var(--green)">航线</span></button>
+      <button class="bnav-item" onclick="go('s-boarding')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="18" height="15" rx="2"/><path d="M2 9h18"/></svg></div><span class="bnav-label">登机牌</span></button>
+      <button class="bnav-item" onclick="go('s-profile')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="7" r="4"/><path d="M3 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span class="bnav-label">我的</span></button>
+    </div>
+  </div>
+
+  <!-- ══ MODE SELECTION ══ -->
+  <div class="screen hidden-right" id="s-mode">
+    <div class="topnav">
+      <button class="back-btn" onclick="back()"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"><path d="M11 4L6 9l5 5"/></svg></button>
+      <span class="nav-title">观景模式</span>
+    </div>
+    <div class="mode-scroll">
+      <div class="mode-intro fade-up">根据您的飞行目的，选择最适合的观景体验。您的偏好会同步到座舱系统，飞行中也可随时切换。</div>
+
+      <div class="mode-option fade-up-1" id="mo0" onclick="selectMode(0)">
+        <div class="mo-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg></div>
+        <div class="mo-icon" style="background:#E4EFE9"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3A7D5F" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+        <div class="mo-name">景点探索</div>
+        <div class="mo-desc">玻璃实时标注沿途地标，点击查看景点历史、数据与故事。适合初次体验或希望了解沈北风貌的旅行者。</div>
+        <div class="mo-tags">
+          <span class="mo-tag" style="background:#E4EFE9;color:#2B6049">AR标注全开</span>
+          <span class="mo-tag" style="background:#E4EFE9;color:#2B6049">景点百科</span>
+          <span class="mo-tag" style="background:#E4EFE9;color:#2B6049">手势交互</span>
+        </div>
+      </div>
+
+      <div class="mode-option fade-up-2" id="mo1" onclick="selectMode(1)">
+        <div class="mo-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg></div>
+        <div class="mo-icon" style="background:#F0EBE0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8C6020" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="15" rx="2"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1.5" fill="#8C6020"/></svg></div>
+        <div class="mo-name">摄影引导</div>
+        <div class="mo-desc">AI 分析光线与构图，提前 5 秒推送最佳拍摄时机。三分法辅助线叠加，手势一键拍照，内容自动存档。</div>
+        <div class="mo-tags">
+          <span class="mo-tag" style="background:#F0EBE0;color:#7A5018">构图辅助</span>
+          <span class="mo-tag" style="background:#F0EBE0;color:#7A5018">时机提示</span>
+          <span class="mo-tag" style="background:#F0EBE0;color:#7A5018">自动存档</span>
+        </div>
+      </div>
+
+      <div class="mode-option fade-up-3" id="mo2" onclick="selectMode(2)">
+        <div class="mo-check"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 6l3 3 5-5"/></svg></div>
+        <div class="mo-icon" style="background:#E6EEF5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A5080" stroke-width="1.5" stroke-linecap="round"><path d="M12 2C8 2 5 5 5 9c0 5.5 7 13 7 13s7-7.5 7-13c0-4-3-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <div class="mo-name">静谧沉浸</div>
+        <div class="mo-desc">AR 信息最小化，仅保留飞行高度。自然环境音为主要声景，屏幕亮度自动降低，专注于窗外的自然世界。</div>
+        <div class="mo-tags">
+          <span class="mo-tag" style="background:#E6EEF5;color:#0C447C">信息极简</span>
+          <span class="mo-tag" style="background:#E6EEF5;color:#0C447C">自然声景</span>
+          <span class="mo-tag" style="background:#E6EEF5;color:#0C447C">低亮度</span>
+        </div>
+      </div>
+
+      <div class="confirm-btn fade-up-4">
+        <button class="btn-confirm" id="confirm-mode-btn" disabled onclick="confirmMode()">请先选择模式</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BOARDING PASS ══ -->
+  <div class="screen hidden-right" id="s-boarding">
+    <div class="topnav">
+      <button class="back-btn" onclick="back()"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"><path d="M11 4L6 9l5 5"/></svg></button>
+      <span class="nav-title">登机牌</span>
+      <span class="nav-badge" style="background:var(--goldbg);color:var(--gold)">星际会员</span>
+    </div>
+    <div class="bp-scroll">
+      <div class="boarding-pass fade-up">
+        <div class="bp-top">
+          <div class="bp-airline">
+            <span class="bp-brand">SKYVIEW · 天空视界</span>
+            <span class="bp-status">已确认</span>
+          </div>
+          <div class="bp-route">
+            <div style="text-align:center">
+              <div class="bp-code">VP01</div>
+              <div style="font-size:10px;color:rgba(168,196,180,.4);margin-top:2px">蒲河花海公园</div>
+            </div>
+            <div class="bp-arrow">
+              <svg width="40" height="16" viewBox="0 0 40 16" fill="none">
+                <path d="M2 8h32M28 3l8 5-8 5" stroke="rgba(78,155,122,.5)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="8" cy="8" r="2" fill="rgba(78,155,122,.4)"/>
+                <circle cx="20" cy="8" r="1.5" fill="rgba(78,155,122,.3)"/>
+              </svg>
+            </div>
+            <div style="text-align:center">
+              <div class="bp-code">VP01</div>
+              <div style="font-size:10px;color:rgba(168,196,180,.4);margin-top:2px">返回原点</div>
+            </div>
+          </div>
+        </div>
+        <div class="bp-grid">
+          <div class="bp-cell"><div class="bpc-label">航班</div><div class="bpc-val">CE-902</div></div>
+          <div class="bp-cell"><div class="bpc-label">起飞</div><div class="bpc-val">14:30</div></div>
+          <div class="bp-cell"><div class="bpc-label">座位</div><div class="bpc-val" style="font-size:18px;color:#5FA88C">1A</div></div>
+        </div>
+        <div class="bp-grid">
+          <div class="bp-cell"><div class="bpc-label">日期</div><div class="bpc-val" style="font-size:12px">2025·10·18</div></div>
+          <div class="bp-cell"><div class="bpc-label">舱型</div><div class="bpc-val" style="font-size:12px">全景观光</div></div>
+          <div class="bp-cell"><div class="bpc-label">乘客</div><div class="bpc-val" style="font-size:12px">仲佳玮</div></div>
+        </div>
+        <div class="bp-divider"><div class="bp-dashes"></div></div>
+        <div class="bp-bottom">
+          <div class="bp-qr" id="qr-container"></div>
+          <div class="bp-name">仲佳玮</div>
+          <div class="bp-seat">蒲河·辉山 生态观光环线 · 全景座舱</div>
+        </div>
+      </div>
+
+      <div class="checklist-card fade-up-1">
+        <div class="cl-title">登机前检查清单</div>
+        <div class="cl-item" id="cl0" onclick="toggleCheck(0)">
+          <div class="cl-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 4-4"/></svg></div>
+          <div class="cl-text">已选择观景模式</div>
+        </div>
+        <div class="cl-item" id="cl1" onclick="toggleCheck(1)">
+          <div class="cl-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 4-4"/></svg></div>
+          <div class="cl-text">确认座位与姓名无误</div>
+        </div>
+        <div class="cl-item" id="cl2" onclick="toggleCheck(2)">
+          <div class="cl-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 4-4"/></svg></div>
+          <div class="cl-text">提前 30 分钟到达起降点</div>
+        </div>
+        <div class="cl-item" id="cl3" onclick="toggleCheck(3)">
+          <div class="cl-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 4-4"/></svg></div>
+          <div class="cl-text">手机已充电，相机准备好</div>
+        </div>
+        <div class="cl-item" id="cl4" onclick="toggleCheck(4)">
+          <div class="cl-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 4-4"/></svg></div>
+          <div class="cl-text">查阅航线景点介绍</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <button class="bnav-item" onclick="go('s-home')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9L11 2l9 7v10a1 1 0 01-1 1H3a1 1 0 01-1-1V9z"/><path d="M8 21V11h6v10"/></svg></div><span class="bnav-label">首页</span></button>
+      <button class="bnav-item" onclick="go('s-flight')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M21 16l-8-8-4 4-6-3"/><circle cx="3" cy="9" r="1.5"/><circle cx="11" cy="5" r="1.5"/><circle cx="19" cy="13" r="1.5"/></svg></div><span class="bnav-label">航线</span></button>
+      <button class="bnav-item active" onclick="go('s-boarding')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="18" height="15" rx="2"/><path d="M2 9h18"/></svg></div><span class="bnav-label" style="color:var(--green)">登机牌</span></button>
+      <button class="bnav-item" onclick="go('s-profile')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="7" r="4"/><path d="M3 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span class="bnav-label">我的</span></button>
+    </div>
+  </div>
+
+  <!-- ══ PROFILE ══ -->
+  <div class="screen hidden-right" id="s-profile">
+    <div class="topnav">
+      <button class="back-btn" onclick="back()"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round"><path d="M11 4L6 9l5 5"/></svg></button>
+      <span class="nav-title">个人中心</span>
+    </div>
+    <div class="profile-scroll">
+      <div class="avatar-section fade-up">
+        <div class="avatar">仲</div>
+        <div style="flex:1">
+          <div class="av-name">仲佳玮</div>
+          <div class="av-sub">SKYVIEW 星际会员 · 沈阳</div>
+          <div class="av-flights" style="padding-top:12px;margin-top:12px;border-top:0.5px solid rgba(78,155,122,.15)">
+            <div class="af-item"><div class="af-num">3</div><div class="af-label">飞行次数</div></div>
+            <div class="af-item"><div class="af-num">44</div><div class="af-label">飞行分钟</div></div>
+            <div class="af-item"><div class="af-num">9</div><div class="af-label">景点打卡</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pref-section fade-up-1">
+        <div class="ps-label">偏好设置</div>
+        <div class="card">
+          <div class="card-row">
+            <div class="cr-icon" style="background:#E4EFE9"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#3A7D5F" stroke-width="1.5"><circle cx="9" cy="9" r="6"/><circle cx="9" cy="9" r="2"/></svg></div>
+            <div class="cr-body"><div class="cr-title">默认观景模式</div><div class="cr-sub" id="pref-mode-label">景点探索</div></div>
+            <span class="chevron">›</span>
+          </div>
+          <div class="card-row">
+            <div class="cr-icon" style="background:#E4EFE9"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#3A7D5F" stroke-width="1.5"><path d="M9 3v12M3 9h12" stroke-linecap="round"/><circle cx="9" cy="9" r="6"/></svg></div>
+            <div class="cr-body"><div class="cr-title">语言</div><div class="cr-sub">中文（简体）</div></div>
+            <span class="chevron">›</span>
+          </div>
+          <div class="card-row">
+            <div class="cr-icon" style="background:#E4EFE9"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#3A7D5F" stroke-width="1.5"><path d="M9 2a6 6 0 00-6 6c0 4 6 9 6 9s6-5 6-9a6 6 0 00-6-6z"/><circle cx="9" cy="8" r="2"/></svg></div>
+            <div class="cr-body"><div class="cr-title">晕动症等级</div><div class="cr-sub">无 / 系统不限制飞行高度</div></div>
+            <span class="chevron">›</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pref-section fade-up-2">
+        <div class="ps-label">历史飞行</div>
+        <div class="card">
+          <div class="card-row"><div class="cr-icon" style="background:#E4EFE9"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#3A7D5F" stroke-width="1.5"><circle cx="9" cy="9" r="6"/><path d="M9 5v4l3 2" stroke-linecap="round"/></svg></div><div class="cr-body"><div class="cr-title">棋盘山·秀湖 环线</div><div class="cr-sub">2025·08·14 · 18min</div></div><span class="chevron">›</span></div>
+          <div class="card-row"><div class="cr-icon" style="background:#E4EFE9"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#3A7D5F" stroke-width="1.5"><circle cx="9" cy="9" r="6"/><path d="M9 5v4l3 2" stroke-linecap="round"/></svg></div><div class="cr-body"><div class="cr-title">蒲河·辉山 生态环线</div><div class="cr-sub">2025·05·02 · 22min</div></div><span class="chevron">›</span></div>
+        </div>
+      </div>
+
+      <div class="pref-section fade-up-3">
+        <div class="ps-label">其他</div>
+        <div class="card">
+          <div class="card-row"><div class="cr-body"><div class="cr-title">通知设置</div></div><span class="chevron">›</span></div>
+          <div class="card-row"><div class="cr-body"><div class="cr-title">隐私与数据</div></div><span class="chevron">›</span></div>
+          <div class="card-row"><div class="cr-body"><div class="cr-title" style="color:#C43A2A">退出登录</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="bottomnav">
+      <button class="bnav-item" onclick="go('s-home')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9L11 2l9 7v10a1 1 0 01-1 1H3a1 1 0 01-1-1V9z"/><path d="M8 21V11h6v10"/></svg></div><span class="bnav-label">首页</span></button>
+      <button class="bnav-item" onclick="go('s-flight')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><path d="M21 16l-8-8-4 4-6-3"/><circle cx="3" cy="9" r="1.5"/><circle cx="11" cy="5" r="1.5"/><circle cx="19" cy="13" r="1.5"/></svg></div><span class="bnav-label">航线</span></button>
+      <button class="bnav-item" onclick="go('s-boarding')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="4" width="18" height="15" rx="2"/><path d="M2 9h18"/></svg></div><span class="bnav-label">登机牌</span></button>
+      <button class="bnav-item active" onclick="go('s-profile')"><div class="bnav-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="7" r="4"/><path d="M3 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><span class="bnav-label" style="color:var(--green)">我的</span></button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let history=[];
+let selectedMode=-1;
+
+function go(id){
+  const cur=document.querySelector('.screen:not(.hidden-left):not(.hidden-right)');
+  if(cur&&cur.id!==id){
+    history.push(cur.id);
+    cur.classList.add('hidden-left');
+    const next=document.getElementById(id);
+    next.classList.remove('hidden-right','hidden-left');
+  }
+}
+
+function back(){
+  if(history.length===0) return;
+  const prevId=history.pop();
+  const cur=document.querySelector('.screen:not(.hidden-left):not(.hidden-right)');
+  if(cur){cur.classList.add('hidden-right');}
+  const prev=document.getElementById(prevId);
+  prev.classList.remove('hidden-left','hidden-right');
+}
+
+function selectMode(idx){
+  selectedMode=idx;
+  [0,1,2].forEach(i=>{
+    document.getElementById('mo'+i).classList.toggle('selected',i===idx);
+  });
+  const btn=document.getElementById('confirm-mode-btn');
+  btn.disabled=false;
+  const labels=['景点探索模式已选定','摄影引导模式已选定','静谧沉浸模式已选定'];
+  btn.textContent='确认：'+['景点探索','摄影引导','静谧沉浸'][idx];
+}
+
+function confirmMode(){
+  if(selectedMode<0) return;
+  const modeNames=['景点探索','摄影引导','静谧沉浸'];
+  document.getElementById('pref-mode-label').textContent=modeNames[selectedMode];
+  const card=document.querySelector('#s-home .card');
+  const modeRow=card.querySelectorAll('.card-row')[0];
+  modeRow.querySelector('.cr-badge').textContent='已设置';
+  modeRow.querySelector('.cr-badge').style.background='#E1F0E8';
+  modeRow.querySelector('.cr-badge').style.color='#2B6049';
+  document.getElementById('cl0').classList.add('done');
+  back();
+}
+
+function toggleCheck(idx){
+  document.getElementById('cl'+idx).classList.toggle('done');
+}
+
+function drawQR(){
+  const c=document.getElementById('qr-container');
+  const size=7;
+  const cell=16;
+  let html='<svg width="120" height="120" viewBox="0 0 120 120" fill="none">';
+  const pattern=[
+    [1,1,1,1,1,1,1,0,0,1,0,1,0,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1],
+    [1,0,1,1,1,0,1,0,0,1,0,1,0,1,0,1,1,1,0,1],
+    [1,0,1,1,1,0,1,0,1,0,1,0,1,1,0,1,1,1,0,1],
+    [1,0,1,1,1,0,1,0,0,1,0,1,0,1,0,1,1,1,0,1],
+    [1,0,0,0,0,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,1,1,1],
+    [0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0],
+    [1,0,1,1,0,1,1,1,0,0,1,0,1,1,1,0,1,1,0,1],
+    [0,1,0,0,1,0,0,0,1,1,0,1,0,0,0,1,0,0,1,0],
+    [1,0,1,1,0,1,1,1,0,0,1,0,1,1,1,0,1,1,0,1],
+    [0,1,0,0,1,0,0,0,1,1,0,1,0,0,0,1,0,0,1,0],
+    [1,1,1,1,1,1,1,0,1,0,1,0,1,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,1,0,0,1,0,1,0,0,0,1,0,0,1,0],
+    [1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,1],
+    [1,0,1,1,1,0,1,0,0,1,0,1,0,0,0,1,0,0,1,0],
+    [1,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,1,0,0,1,0,1,0,0,0,1,0,0,1,0],
+    [1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,0,1],
+    [0,0,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0],
+  ];
+  const cs=6;
+  for(let r=0;r<pattern.length;r++){
+    for(let c2=0;c2<pattern[r].length;c2++){
+      if(pattern[r][c2]){
+        html+=`<rect x="${c2*cs}" y="${r*cs}" width="${cs}" height="${cs}" fill="#1A3530"/>`;
+      }
+    }
+  }
+  html+='</svg>';
+  c.innerHTML=html;
+}
+
+function updateClock(){
+  const n=new Date();
+  const t=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+  document.querySelectorAll('#clock,#clock2').forEach(el=>el&&(el.textContent=t));
+}
+
+setTimeout(()=>{
+  const bar=document.getElementById('hero-bar');
+  if(bar) bar.style.width='0%';
+},100);
+
+drawQR();
+updateClock();
+setInterval(updateClock,10000);
+</script>
+</body>
+</html>
